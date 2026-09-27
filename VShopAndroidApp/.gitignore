@@ -1,0 +1,25 @@
+# Build
+build/
+.gradle
+/captures
+.externalNativeBuild
+.cxx
+
+# IDE
+*.iml
+/.idea/caches
+/.idea/libraries
+/.idea/modules.xml
+/.idea/workspace.xml
+/.idea/navEditor.xml
+/.idea/assetWizardSettings.xml
+
+# Secrets
+local.properties
+*.jks
+*.keystore
+keystore.properties
+google-services.json
+
+# OS
+.DS_Store
