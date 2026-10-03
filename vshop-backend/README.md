@@ -14,10 +14,22 @@ Spring Boot (Kotlin) + PostgreSQL backend for a small e-commerce Android app tha
 
 ## Run it
 
-**1. Start PostgreSQL** (needs Docker Desktop)
+**Quick start: everything in Docker** (needs Docker Desktop, no Java needed)
 
 ```bash
-docker compose up -d
+docker compose up -d --build   # first time, or after code changes
+docker compose up -d           # later
+docker compose stop            # stop (data is kept)
+```
+
+The API is at http://localhost:8080 and the database at `localhost:5433`. A `.env` file is optional here. Logs: `docker logs -f vshop-api`.
+
+To work on the code instead, follow the steps below.
+
+**1. Start PostgreSQL only** (needs Docker Desktop)
+
+```bash
+docker compose up -d postgres
 ```
 
 **2. Create your `.env`**
