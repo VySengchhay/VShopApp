@@ -1,4 +1,5 @@
-# Starts PostgreSQL for local development:  docker compose up -d
+# Starts PostgreSQL and the API:  docker compose up -d
+# Only the database and inbox (to run the API with ./gradlew bootRun):  docker compose up -d postgres mailpit
 services:
   postgres:
     image: postgres:16-alpine
@@ -11,6 +12,43 @@ services:
       - "5433:5432"   # host 5433 so it doesn't clash with a local Postgres on 5432
     volumes:
       - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U vshop -d vshop"]
+      interval: 2s
+      retries: 30
+
+  api:
+    build: .
+    container_name: vshop-api
+    env_file:
+      - path: .env
+        required: false
+    environment:
+      # Inside Docker the database is reached by its service name, not localhost:5433.
+      DB_URL: jdbc:postgresql://postgres:5432/vshop
+      # Password reset codes are emailed to Mailpit (open http://localhost:8025 to read them).
+      OTP_LOG_ONLY: "false"
+      MAIL_HOST: mailpit
+      MAIL_PORT: "1025"
+      MAIL_SMTP_AUTH: "false"
+      MAIL_USERNAME: ""
+      MAIL_PASSWORD: ""
+    ports:
+      - "8080:8080"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      mailpit:
+        condition: service_started
+    restart: unless-stopped
+
+  # Fake email inbox for local testing. Web UI: http://localhost:8025
+  mailpit:
+    image: axllent/mailpit
+    container_name: vshop-mailpit
+    ports:
+      - "8025:8025"   # web inbox
+      - "1025:1025"   # SMTP
 
 volumes:
   pgdata:
