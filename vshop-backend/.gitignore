@@ -1,0 +1,28 @@
+# Secrets
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.p12
+*.jks
+application-local.yml
+application-local.properties
+
+# Build
+.gradle/
+.kotlin/
+build/
+out/
+!gradle/wrapper/gradle-wrapper.jar
+
+# Logs
+*.log
+logs/
+
+# IDE
+.idea/
+*.iml
+.vscode/
+.DS_Store
+HELP.md
