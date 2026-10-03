@@ -1,0 +1,109 @@
+### VShop API — try these in IntelliJ (HTTP Client) or copy into Postman.
+### Android emulator reaches your PC at http://10.0.2.2:8080
+
+@base = http://localhost:8080
+@token = paste-accessToken-from-login
+@refresh = paste-refreshToken-from-login
+
+### 1. Register -> 201 { "id": "1", "email": "vy@example.com" } (no tokens: log in next)
+POST {{base}}/api/auth/register
+Content-Type: application/json
+
+{ "email": "vy@example.com", "password": "password123" }
+
+### 2. Login -> copy "accessToken" into @token and "refreshToken" into @refresh above
+POST {{base}}/api/auth/login
+Content-Type: application/json
+
+{ "email": "vy@example.com", "password": "password123" }
+
+### 2a. Who am I (needs the access token; 401 when it's missing or expired)
+GET {{base}}/api/auth/me
+Authorization: Bearer {{token}}
+
+### 2b. Refresh -> new accessToken + refreshToken. The old refresh token stops working (401 if reused)
+POST {{base}}/api/auth/refresh
+Content-Type: application/json
+
+{ "refreshToken": "{{refresh}}" }
+
+### 2c. Profile name + phone (used as payer details for PayWay)
+PUT {{base}}/api/me
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{ "fullName": "Vy Sengchhay", "phone": "012345678" }
+
+### 3. Categories (public)
+GET {{base}}/api/categories
+
+### 4. Products (public): filters are optional
+GET {{base}}/api/products?categoryId=1&q=coffee&sort=price_asc&page=0&size=20
+
+### 5. Product detail
+GET {{base}}/api/products/1
+
+### 6. Add an address
+POST {{base}}/api/addresses
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "fullName": "Vy Sengchhay", "phone": "012345678",
+  "province": "Phnom Penh", "district": "Khan Chamkarmon", "commune": "Sangkat Tuol Tumpung Ti Muoy",
+  "street": "#12, St 450", "note": "Near the market", "isDefault": true
+}
+
+### 7. Create order from cart (prices are calculated on the server)
+POST {{base}}/api/orders
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{ "addressId": 1, "items": [ { "productId": 1, "quantity": 1 }, { "productId": 4, "quantity": 2 } ] }
+
+### 8. Start payment -> returns qrString + abapayDeeplink + tranId
+POST {{base}}/api/orders/1/pay
+Authorization: Bearer {{token}}
+
+### 9. Poll status (the app calls this every 3 s)
+GET {{base}}/api/orders/1/payment-status
+Authorization: Bearer {{token}}
+
+### 10. MOCK MODE ONLY: pretend the customer paid (use tranId from step 8)
+POST {{base}}/api/dev/payments/PASTE_TRAN_ID/approve
+
+### 11. My orders
+GET {{base}}/api/orders
+Authorization: Bearer {{token}}
+
+### 12. Cancel an unpaid order
+POST {{base}}/api/orders/1/cancel
+Authorization: Bearer {{token}}
+
+### ---------- Password reset ----------
+
+### 13. Request a code -> the 6-digit code appears in the server log (OTP_LOG_ONLY=true)
+POST {{base}}/api/auth/password-reset/request
+Content-Type: application/json
+
+{ "email": "vy@example.com" }
+
+### 14. Verify the code (optional check, doesn't use the code up)
+POST {{base}}/api/auth/password-reset/verify
+Content-Type: application/json
+
+{ "email": "vy@example.com", "otp": "PASTE_CODE_FROM_LOG" }
+
+### 15. Set the new password (logs out every device: all refresh tokens are revoked)
+POST {{base}}/api/auth/password-reset/confirm
+Content-Type: application/json
+
+{ "email": "vy@example.com", "otp": "PASTE_CODE_FROM_LOG", "newPassword": "newpassword123" }
+
+### ---------- Logout ----------
+
+### 16. Logout -> { "message": "Logged out" } (safe to call twice)
+POST {{base}}/api/auth/logout
+Content-Type: application/json
+
+{ "refreshToken": "{{refresh}}" }
