@@ -1,11 +1,21 @@
-# Build
+# ---------- Build ----------
 build/
-.gradle
+.gradle/
 /captures
 .externalNativeBuild
 .cxx
+.kotlin/
 
-# IDE
+# Build outputs (signed APK / AAB)
+*.apk
+*.aab
+*.ap_
+*.dex
+/app/release/
+/app/debug/
+output-metadata.json
+
+# ---------- IDE (Android Studio / IntelliJ) ----------
 *.iml
 /.idea/caches
 /.idea/libraries
@@ -13,13 +23,39 @@ build/
 /.idea/workspace.xml
 /.idea/navEditor.xml
 /.idea/assetWizardSettings.xml
+/.idea/deploymentTargetDropDown.xml
+/.idea/deploymentTargetSelector.xml
+/.idea/tasks.xml
+/.idea/shelf
+/.idea/gradle.xml
+/.idea/misc.xml
+/.idea/androidTestResultsUserPreferences.xml
+/.idea/appInsightsSettings.xml
+/.idea/other.xml
 
-# Secrets
+# ---------- Secrets ----------
 local.properties
+keystore.properties
+secrets.properties
 *.jks
 *.keystore
-keystore.properties
+*.p12
+*.pem
+*.key
+.env
+.env.*
 google-services.json
+GoogleService-Info.plist
 
-# OS
+# ---------- Logs & temp ----------
+*.log
+*.tmp
+captures/
+
+# ---------- OS ----------
 .DS_Store
+Thumbs.db
+desktop.ini
+
+# ---------- Claude Code (personal settings) ----------
+.claude/settings.local.json
