@@ -22,14 +22,14 @@ docker compose up -d           # later
 docker compose stop            # stop (data is kept)
 ```
 
-The API is at http://localhost:8080 and the database at `localhost:5433`. A `.env` file is optional here. Logs: `docker logs -f vshop-api`.
+The API is at http://localhost:8080, the database at `localhost:5433`, and the Mailpit inbox (password reset emails) at http://localhost:8025. A `.env` file is optional here. Logs: `docker logs -f vshop-api`.
 
 To work on the code instead, follow the steps below.
 
-**1. Start PostgreSQL only** (needs Docker Desktop)
+**1. Start PostgreSQL and Mailpit only** (needs Docker Desktop)
 
 ```bash
-docker compose up -d postgres
+docker compose up -d postgres mailpit
 ```
 
 **2. Create your `.env`**
@@ -223,8 +223,9 @@ Tokens response:
 request {email} ──▶ 6-digit code (email or server log) ──▶ verify {email, otp} ──▶ confirm {email, otp, newPassword}
 ```
 
-- **Test without email:** keep `OTP_LOG_ONLY=true`. The code is printed in the server log as `[DEV ONLY] Password reset code for ...`.
-- **Real email:** set `OTP_LOG_ONLY=false` and fill `MAIL_*` in `.env` (a free Mailtrap testing inbox works).
+- **Mailpit (default):** `docker compose up -d` also starts Mailpit, a fake inbox. Every reset email lands at http://localhost:8025.
+- **Test without email:** set `OTP_LOG_ONLY=true`. The code is printed in the server log as `[DEV ONLY] Password reset code for ...`.
+- **Real email:** keep `OTP_LOG_ONLY=false` and point `MAIL_*` in `.env` at a real SMTP server.
 - **Safety rules in the code:**
   - Only the BCrypt hash of the code is stored, never the code.
   - Codes expire after `OTP_EXPIRY_MIN` (10) minutes and lock after `OTP_MAX_ATTEMPTS` (5) wrong tries.
