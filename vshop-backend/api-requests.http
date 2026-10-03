@@ -82,7 +82,7 @@ Authorization: Bearer {{token}}
 
 ### ---------- Password reset ----------
 
-### 13. Request a code -> the 6-digit code appears in the server log (OTP_LOG_ONLY=true)
+### 13. Request a code -> the 6-digit code is emailed to Mailpit: open http://localhost:8025
 POST {{base}}/api/auth/password-reset/request
 Content-Type: application/json
 
@@ -92,13 +92,13 @@ Content-Type: application/json
 POST {{base}}/api/auth/password-reset/verify
 Content-Type: application/json
 
-{ "email": "vy@example.com", "otp": "PASTE_CODE_FROM_LOG" }
+{ "email": "vy@example.com", "otp": "PASTE_CODE_FROM_MAILPIT" }
 
 ### 15. Set the new password (logs out every device: all refresh tokens are revoked)
 POST {{base}}/api/auth/password-reset/confirm
 Content-Type: application/json
 
-{ "email": "vy@example.com", "otp": "PASTE_CODE_FROM_LOG", "newPassword": "newpassword123" }
+{ "email": "vy@example.com", "otp": "PASTE_CODE_FROM_MAILPIT", "newPassword": "newpassword123" }
 
 ### ---------- Logout ----------
 
