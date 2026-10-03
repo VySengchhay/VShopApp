@@ -6,7 +6,7 @@ spring:
     import: optional:file:.env[.properties]
 
   datasource:
-    url: ${DB_URL:jdbc:postgresql://localhost:5432/vshop}
+    url: ${DB_URL:jdbc:postgresql://localhost:5433/vshop}
     username: ${DB_USERNAME:vshop}
     password: ${DB_PASSWORD:vshop}
 

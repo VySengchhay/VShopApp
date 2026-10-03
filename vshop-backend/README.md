@@ -264,7 +264,7 @@ src/main/resources/db/migration/   Flyway SQL (schema + sample data)
 |---|---|
 | `Wrong hash` from PayWay | Check `PAYWAY_API_KEY` has no spaces and is the sandbox Public Key. Field order is in `PayWayHasher.PURCHASE_HASH_ORDER`. |
 | PayWay rejects the request from your IP or domain | Ask ABA to whitelist your sandbox domain or IP. |
-| `Connection refused` to PostgreSQL | Run `docker compose up -d` and check port 5432 is free. |
+| `Connection refused` to PostgreSQL | Run `docker compose up -d` and check port 5433 is free. |
 | Emulator can't reach the server | Use `http://10.0.2.2:8080`, not `localhost`. |
 | Callback never arrives | Normal on localhost. Use ngrok, or rely on polling. |
 | Key expired | The sandbox key has an expiry date. Ask ABA for a new one. |
